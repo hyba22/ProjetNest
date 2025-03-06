@@ -1,7 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/user.dto';
+import { CreateUserDto, Role } from './dto/user.dto';
 import User from './user.entity';
 
 export class UsersService {
@@ -27,10 +27,9 @@ export class UsersService {
     throw new NotFoundException('Could not find the user');
   }
 
-  async createUser(createUserDto: CreateUserDto) {
-    const newUser =  this.usersRepository.create(createUserDto);
-    let u = await this.usersRepository.save(newUser);
-    return u;
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
+    const newUser = this.usersRepository.create(createUserDto);
+    return await this.usersRepository.save(newUser);
   }
 
   async deleteById(id: number) {
@@ -45,5 +44,19 @@ export class UsersService {
 
     await this.usersRepository.remove(user);
     return user;
+  }
+
+  async updateUserRole(id: number, role: Role): Promise<User> {
+    const user = await this.usersRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
+    if (!user) {
+      throw new NotFoundException('Could not find the user');
+    }
+
+    user.role = role; 
+    return await this.usersRepository.save(user);
   }
 }

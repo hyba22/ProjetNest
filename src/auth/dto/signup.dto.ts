@@ -1,4 +1,10 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsIn, IsNotEmpty, IsString, MinLength } from 'class-validator';
+
+export enum Role {
+  RH = 'rh',
+  EMPLOYE = 'employes',
+  ADMIN = 'admin',
+}
 
 export class SignUpDto {
   @IsNotEmpty()
@@ -13,4 +19,10 @@ export class SignUpDto {
   @IsString()
   @MinLength(6, { message: 'Password must be at least 6 characters long' })
   password: string;
+
+  @IsNotEmpty()
+  @IsIn([Role.RH, Role.EMPLOYE, Role.ADMIN], {
+    message: 'Role must be one of: rh, employes, admin',
+  })
+  role: Role;
 }

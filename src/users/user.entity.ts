@@ -3,6 +3,7 @@ import {
     Entity,
     PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Role } from './dto/user.dto';
   
   @Entity()
   class User {
@@ -18,6 +19,11 @@ import {
     @Column()
     password: string;
   
-  }
-  
+  @Column({
+    type: 'enum',
+    enum: Role,
+    default: Role.EMPLOYE, 
+  })
+  role: Role;
+}
   export default User;
