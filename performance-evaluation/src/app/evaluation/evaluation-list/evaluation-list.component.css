@@ -1,0 +1,65 @@
+.rating-container {
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+  }
+  
+  .overall-rating {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .stars {
+    color: gold;
+    font-size: 24px;
+  }
+  
+  .rating-distribution {
+    margin: 20px 0;
+  }
+  
+  .rating-bar {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+  }
+  
+  .bar-container {
+    flex-grow: 1;
+    height: 20px;
+    background: #eee;
+    margin: 0 10px;
+  }
+  
+  .bar {
+    height: 100%;
+    background: gold;
+  }
+  
+  .evaluation-card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+  }
+  
+  .evaluation-card .rating {
+    font-weight: bold;
+    color: gold;
+  }
+  
+  .add-evaluation {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f5f5f5;
+    border-radius: 5px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  textarea {
+    width: 100%;
+    min-height: 100px;
+  }
