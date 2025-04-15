@@ -1,0 +1,85 @@
+<!-- src/app/evaluation/evaluation-list/evaluation-list.component.html -->
+<div class="rating-container">
+  <h2>Évaluations</h2>
+
+  <!-- Affichage de la note moyenne -->
+  <div class="overall-rating">
+    <h3>{{ getAverageRating() | number: '1.1-1' }} sur 5</h3>
+    <div
+      class="stars"
+      [attr.aria-label]="'Note moyenne: ' + (getAverageRating() | number: '1.1-1') + ' étoiles'"
+    >
+      <span
+        *ngFor="let star of stars; trackBy: trackByStar"
+        [class.filled]="star <= getAverageRating()"
+      >
+        ★
+      </span>
+    </div>
+    <p>Basé sur {{ evaluations.length }} évaluations</p>
+  </div>
+
+  <!-- Répartition des notes -->
+  <div class="rating-distribution">
+    <div
+      *ngFor="let rating of ratings; trackBy: trackByRating"
+      class="rating-bar"
+    >
+      <span>{{ rating }} étoiles</span>
+      <div class="bar-container">
+        <div
+          class="bar"
+          [style.width.%]="getRatingPercentage(rating)"
+        ></div>
+      </div>
+      <span>{{ countRatings(rating) }}</span>
+    </div>
+  </div>
+
+  <!-- Liste des évaluations -->
+  <div class="evaluation-list">
+    <div
+      *ngFor="let eval of evaluations; trackBy: trackByEvaluation"
+      class="evaluation-card"
+    >
+      <div class="rating">{{ eval.rating }} sur 5 étoiles</div>
+      <div class="date">{{ eval.date | date: 'mediumDate' }}</div>
+      <p class="comments">{{ eval.comments }}</p>
+    </div>
+  </div>
+
+  <!-- Formulaire d'ajout -->
+  <div class="add-evaluation">
+    <h3>Ajouter une évaluation</h3>
+    <form (ngSubmit)="submitEvaluation()" #evalForm="ngForm">
+      <div class="form-group">
+        <label for="rating-select">Note (1-5):</label>
+        <select
+          id="rating-select"
+          [(ngModel)]="newEvaluation.rating"
+          name="rating"
+          required
+        >
+          <option
+            *ngFor="let n of stars; trackBy: trackByStar"
+            [value]="n"
+          >
+            {{ n }}
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="comments-textarea">Commentaire:</label>
+        <textarea
+          id="comments-textarea"
+          [(ngModel)]="newEvaluation.comments"
+          name="comments"
+          placeholder="Entrez votre commentaire..."
+        ></textarea>
+      </div>
+      <button type="submit" [disabled]="!evalForm.valid">
+        Soumettre
+      </button>
+    </form>
+  </div>
+</div>
