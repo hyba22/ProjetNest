@@ -1,0 +1,50 @@
+<!-- evaluation/components/evaluation-form/evaluation-form.component.html -->
+<div class="container mt-4">
+    <h2>{{ isEditMode ? 'Edit Evaluation' : 'Add New Evaluation' }}</h2>
+    
+    <form [formGroup]="evaluationForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="employeeId" class="form-label">Employee ID</label>
+        <input type="number" class="form-control" id="employeeId" formControlName="employeeId">
+        <div *ngIf="evaluationForm.get('employeeId')?.invalid && evaluationForm.get('employeeId')?.touched" class="text-danger">
+          Employee ID is required and must be positive
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <label for="score" class="form-label">Score (0-100)</label>
+        <input type="number" class="form-control" id="score" formControlName="score">
+        <div *ngIf="evaluationForm.get('score')?.invalid && evaluationForm.get('score')?.touched" class="text-danger">
+          Score must be between 0 and 100
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <label for="rating" class="form-label">Rating (1-5 stars)</label>
+        <div class="star-rating-input">
+          <span *ngFor="let star of [1,2,3,4,5]" (click)="evaluationForm.patchValue({ rating: star })">
+            <i [class]="star <= evaluationForm.get('rating')?.value ? 'fas fa-star text-warning' : 'far fa-star'"></i>
+          </span>
+        </div>
+        <input type="hidden" formControlName="rating">
+        <div *ngIf="evaluationForm.get('rating')?.invalid && evaluationForm.get('rating')?.touched" class="text-danger">
+          Please select a rating between 1 and 5 stars
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <label for="date" class="form-label">Evaluation Date</label>
+        <input type="date" class="form-control" id="date" formControlName="date">
+      </div>
+  
+      <div class="mb-3">
+        <label for="comments" class="form-label">Comments</label>
+        <textarea class="form-control" id="comments" rows="3" formControlName="comments"></textarea>
+      </div>
+  
+      <button type="submit" class="btn btn-primary me-2" [disabled]="evaluationForm.invalid">
+        {{ isEditMode ? 'Update' : 'Save' }}
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="router.navigate(['/evaluations'])">Cancel</button>
+    </form>
+  </div>

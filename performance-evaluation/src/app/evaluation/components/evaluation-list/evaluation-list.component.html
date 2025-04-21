@@ -1,0 +1,40 @@
+<!-- evaluation/components/evaluation-list/evaluation-list.component.html -->
+<div class="container mt-4">
+    <h2>{{ isHR ? 'All Evaluations' : 'My Evaluations' }}</h2>
+    
+    <div *ngIf="isHR" class="mb-3">
+      <a routerLink="/evaluations/new" class="btn btn-primary">Add New Evaluation</a>
+    </div>
+  
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th *ngIf="isHR">Employee ID</th>
+            <th>Score</th>
+            <th>Rating</th>
+            <th>Date</th>
+            <th *ngIf="isHR">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let eval of evaluations">
+            <td *ngIf="isHR">{{ eval.employeeId }}</td>
+            <td>{{ eval.score }}%</td>
+            <td>
+              <span class="star-rating">
+                <span *ngFor="let star of [1,2,3,4,5]">
+                  <i [class]="star <= eval.rating ? 'fas fa-star' : 'far fa-star'"></i>
+                </span>
+              </span>
+            </td>
+            <td>{{ eval.date | date:'mediumDate' }}</td>
+            <td *ngIf="isHR">
+              <a [routerLink]="['/evaluations', eval.id]" class="btn btn-sm btn-info me-2">View</a>
+              <button (click)="deleteEvaluation(eval.id!)" class="btn btn-sm btn-danger">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
