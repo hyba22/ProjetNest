@@ -1,0 +1,70 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div class="bg-white p-8 rounded-3xl shadow-md w-full max-w-md border-t-4 border-green-500">
+  
+    
+  
+      <h2 class="text-2xl font-bold text-center mb-1">Bienvenue !</h2>
+      <p class="text-center text-gray-500 mb-6">Connectez-vous pour continue</p>
+  
+    
+      <form (ngSubmit)="onSubmit()" class="space-y-4">
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+          <input
+            id="email"
+            type="email"
+            [(ngModel)]="loginDto.email"
+            name="email"
+            placeholder="Email address"
+            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-400 focus:border-green-400 placeholder-gray-400"
+            required
+          />
+        </div>
+  
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+          <div class="relative">
+            <input
+              id="password"
+              type="password"
+              [(ngModel)]="loginDto.password"
+              name="password"
+              placeholder="Password"
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-400 focus:border-green-400 placeholder-gray-400 pr-10"
+              required
+            />
+            <span class="absolute right-3 top-3 text-gray-400 cursor-pointer">
+              
+            </span>
+          </div>
+        </div>
+  
+        <div class="flex items-center justify-between text-sm">
+          <label class="flex items-center space-x-2">
+            <input type="checkbox" class="form-checkbox text-green-500" />
+            <span>  Souviens-toi de moi</span>
+          </label>
+          <a href="#" class="text-green-500 hover:underline">Mot de passe oublié?</a>
+        </div>
+  
+        <div>
+          <button
+            type="submit"
+            class="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
+          >
+            Sign In
+          </button>
+        </div>
+      </form>
+  
+
+      <p class="mt-4 text-center text-sm text-gray-600">
+        Pas de compte ?
+        <a routerLink="/signup" class="text-green-500 hover:underline">Inscrivez-vous</a>
+      </p>
+  
+
+      <p *ngIf="errorMessage" class="mt-4 text-red-600 text-center">{{ errorMessage }}</p>
+    </div>
+  </div>
+  

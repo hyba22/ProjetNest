@@ -1,4 +1,6 @@
 /* evaluation.component.css */
+
+@import "tailwindcss";
 .star-rating {
     font-size: 1.5rem;
   }

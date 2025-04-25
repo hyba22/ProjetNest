@@ -1,0 +1,90 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div class="bg-white p-8 rounded-3xl shadow-md w-full max-w-md border-t-4 border-green-500">
+  
+     
+  
+     
+      <h2 class="text-2xl font-bold text-center mb-1">Créer un compte</h2>
+      <p class="text-center text-gray-500 mb-6">Veuillez remplir le formulaire</p>
+  
+      <form (ngSubmit)="onSubmit()" class="space-y-4">
+      
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700">Nom</label>
+          <input
+            id="name"
+            type="text"
+            [(ngModel)]="signUpDto.name"
+            name="name"
+            placeholder="Entrez votre nom"
+            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-400 focus:border-green-400 placeholder-gray-400"
+            required
+          />
+        </div>
+  
+      
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+          <input
+            id="email"
+            type="email"
+            [(ngModel)]="signUpDto.email"
+            name="email"
+            placeholder="Entrez votre email"
+            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-400 focus:border-green-400 placeholder-gray-400"
+            required
+          />
+        </div>
+  
+        
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+          <input
+            id="password"
+            type="password"
+            [(ngModel)]="signUpDto.password"
+            name="password"
+            placeholder="Entrez votre mot de passe"
+            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-400 focus:border-green-400 placeholder-gray-400"
+            required
+          />
+        </div>
+  
+        
+        <div>
+          <label for="role" class="block text-sm font-medium text-gray-700">Rôle</label>
+          <select
+            id="role"
+            [(ngModel)]="signUpDto.role"
+            name="role"
+            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-400 focus:border-green-400"
+            required
+          >
+            <option value="" disabled>Sélectionnez un rôle</option>
+            <option value="rh">RH</option>
+            <option value="employes">Employé</option>
+          </select>
+        </div>
+  
+       
+        <div>
+          <button
+            type="submit"
+            class="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
+          >
+            S'inscrire
+          </button>
+        </div>
+      </form>
+  
+     
+      <p class="mt-4 text-center text-sm text-gray-600">
+        Déjà un compte ?
+        <a routerLink="/login" class="text-green-500 hover:underline">Connectez-vous</a>
+      </p>
+  
+    
+      <p *ngIf="errorMessage" class="mt-4 text-red-600 text-center">{{ errorMessage }}</p>
+    </div>
+  </div>
+  

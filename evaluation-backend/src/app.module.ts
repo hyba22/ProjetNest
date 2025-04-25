@@ -9,10 +9,10 @@ import { UsersModule } from './users/users.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'postgres', 
+      type: 'mysql', 
       host: 'localhost',
-      port: 5432, 
-      username: 'postgres',
+      port: 3306, 
+      username: 'root',
       password: 'root',
       database: 'projetnestjs',
       entities: [Evaluation],
