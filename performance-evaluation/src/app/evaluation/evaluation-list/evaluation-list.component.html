@@ -1,85 +1,123 @@
-<!-- src/app/evaluation/evaluation-list/evaluation-list.component.html -->
-<div class="rating-container">
-  <h2>Évaluations</h2>
+<div class="evaluation-container">
+  <!-- En-tête différent selon le mode -->
+  <h1>{{ isHRMode ? 'Gestion des Évaluations' : 'Mes Évaluations' }}</h1>
 
-  <!-- Affichage de la note moyenne -->
-  <div class="overall-rating">
-    <h3>{{ getAverageRating() | number: '1.1-1' }} sur 5</h3>
-    <div
-      class="stars"
-      [attr.aria-label]="'Note moyenne: ' + (getAverageRating() | number: '1.1-1') + ' étoiles'"
-    >
-      <span
-        *ngFor="let star of stars; trackBy: trackByStar"
-        [class.filled]="star <= getAverageRating()"
-      >
-        ★
-      </span>
+  <!-- Section pour ajouter une évaluation -->
+  <div class="actions-section">
+    <div class="actions">
+      <button (click)="toggleForm()" class="toggle-form-btn">
+        {{ showForm ? 'Masquer le formulaire' : 'Ajouter une évaluation' }}
+      </button>
     </div>
-    <p>Basé sur {{ evaluations.length }} évaluations</p>
+
+    <!-- Formulaire d'ajout/modification -->
+    <div *ngIf="showForm" class="evaluation-form">
+      <h3>{{ isEditMode ? 'Modifier l\'Évaluation' : 'Nouvelle Évaluation' }}</h3>
+      <form (ngSubmit)="submitEvaluation()" #evalForm="ngForm">
+        <!-- Show employeeId and reviewerId fields only in HR mode -->
+        <div *ngIf="isHRMode" class="form-group">
+          <label for="employee-id">ID Employé *</label>
+          <input id="employee-id" type="number" 
+                 [(ngModel)]="newEvaluation.employeeId" 
+                 name="employeeId" required>
+        </div>
+
+        <div *ngIf="isHRMode" class="form-group">
+          <label for="reviewer-id">ID Évaluateur *</label>
+          <input id="reviewer-id" type="number" 
+                 [(ngModel)]="newEvaluation.reviewerId" 
+                 name="reviewerId" required>
+        </div>
+
+        <!-- HR name field (read-only in HR mode, editable in non-HR mode) -->
+        <div class="form-group">
+          <label for="hr-name">Nom de RH *</label>
+          <input id="hr-name" type="text" 
+                 [(ngModel)]="newEvaluation.hrName" 
+                 name="hrName" 
+                 [readonly]="isHRMode" 
+                 required>
+        </div>
+
+        <div class="form-group">
+          <label for="score">Score *</label>
+          <input id="score" type="number" 
+                 [(ngModel)]="newEvaluation.score" 
+                 name="score" required>
+        </div>
+
+        <div class="form-group">
+          <label>Note *</label>
+          <div class="star-rating">
+            <span *ngFor="let star of [1,2,3,4,5]" 
+                  (click)="newEvaluation.rating = star"
+                  [class.filled]="star <= newEvaluation.rating">★</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="comments">Commentaire *</label>
+          <textarea id="comments" [(ngModel)]="newEvaluation.comments" 
+                    name="comments" required></textarea>
+        </div>
+
+        <button type="submit" [disabled]="!evalForm.valid" class="submit-btn">
+          {{ isEditMode ? 'Modifier' : 'Enregistrer' }}
+        </button>
+        <button type="button" (click)="toggleForm()" class="cancel-btn">Annuler</button>
+      </form>
+    </div>
   </div>
 
-  <!-- Répartition des notes -->
-  <div class="rating-distribution">
-    <div
-      *ngFor="let rating of ratings; trackBy: trackByRating"
-      class="rating-bar"
-    >
-      <span>{{ rating }} étoiles</span>
-      <div class="bar-container">
-        <div
-          class="bar"
-          [style.width.%]="getRatingPercentage(rating)"
-        ></div>
+  <!-- Statistiques communes -->
+  <div class="stats-section">
+    <div class="average-rating">
+      <h2>{{ averageRating | number:'1.1-1' }} sur 5</h2>
+      <div class="stars">
+        <span *ngFor="let star of [1,2,3,4,5]" 
+              [class.filled]="star <= averageRating">★</span>
       </div>
-      <span>{{ countRatings(rating) }}</span>
+      <p>Basé sur {{ evaluations.length }} évaluation(s)</p>
+    </div>
+
+    <div class="rating-distribution">
+      <h3>Répartition des notes</h3>
+      <div *ngFor="let rating of [5,4,3,2,1]" class="distribution-row">
+        <span>{{ rating }} étoile(s)</span>
+        <div class="progress-bar">
+          <div class="progress" [style.width.%]="getRatingPercentage(rating)"></div>
+        </div>
+        <span>{{ countRatings(rating) }} ({{ getRatingPercentage(rating) | number:'1.0-0' }}%)</span>
+      </div>
     </div>
   </div>
 
   <!-- Liste des évaluations -->
-  <div class="evaluation-list">
-    <div
-      *ngFor="let eval of evaluations; trackBy: trackByEvaluation"
-      class="evaluation-card"
-    >
-      <div class="rating">{{ eval.rating }} sur 5 étoiles</div>
-      <div class="date">{{ eval.date | date: 'mediumDate' }}</div>
-      <p class="comments">{{ eval.comments }}</p>
+  <div class="evaluations-list">
+    <h2>Détails des évaluations</h2>
+    
+    <div *ngIf="evaluations.length === 0" class="no-evaluations">
+      <p>{{ isHRMode ? 'Aucune évaluation trouvée' : 'Vous n\'avez pas encore d\'évaluation' }}</p>
     </div>
-  </div>
 
-  <!-- Formulaire d'ajout -->
-  <div class="add-evaluation">
-    <h3>Ajouter une évaluation</h3>
-    <form (ngSubmit)="submitEvaluation()" #evalForm="ngForm">
-      <div class="form-group">
-        <label for="rating-select">Note (1-5):</label>
-        <select
-          id="rating-select"
-          [(ngModel)]="newEvaluation.rating"
-          name="rating"
-          required
-        >
-          <option
-            *ngFor="let n of stars; trackBy: trackByStar"
-            [value]="n"
-          >
-            {{ n }}
-          </option>
-        </select>
+    <div *ngFor="let eval of evaluations" class="evaluation-card">
+      <div class="rating-display">
+        <span *ngFor="let star of [1,2,3,4,5]" 
+              [class.filled]="star <= eval.rating">★</span>
+        <span class="rating-value">({{ eval.rating }} sur 5)</span>
       </div>
-      <div class="form-group">
-        <label for="comments-textarea">Commentaire:</label>
-        <textarea
-          id="comments-textarea"
-          [(ngModel)]="newEvaluation.comments"
-          name="comments"
-          placeholder="Entrez votre commentaire..."
-        ></textarea>
+      <div class="evaluation-meta">
+        <span class="date">{{ eval.date | date:'mediumDate' }}</span>
+        <span *ngIf="isHRMode" class="employee-id">Employé #{{ eval.employeeId }}</span>
+        <span *ngIf="isHRMode" class="reviewer-id">Évaluateur #{{ eval.reviewerId }}</span>
+        <span *ngIf="eval.hrName" class="hr-name">Ajouté par: {{ eval.hrName }}</span>
+        <span class="score">Score: {{ eval.score }}</span>
       </div>
-      <button type="submit" [disabled]="!evalForm.valid">
-        Soumettre
-      </button>
-    </form>
+      <p class="evaluation-comment">{{ eval.comments }}</p>
+      <div class="action-buttons">
+        <button (click)="editEvaluation(eval)" class="edit-btn">Modifier</button>
+        <button (click)="deleteEvaluation(eval.id)" class="delete-btn">Supprimer</button>
+      </div>
+    </div>
   </div>
 </div>

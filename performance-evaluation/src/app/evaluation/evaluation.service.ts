@@ -23,4 +23,20 @@ export class EvaluationService {
     
     return this.http.post<Evaluation>(this.apiUrl, evaluation);
   }
+
+  updateEvaluation(evaluation: Evaluation): Observable<Evaluation> {
+    // Validation simple des données avant envoi
+    if (evaluation.rating < 1 || evaluation.rating > 5) {
+      throw new Error('La note doit être entre 1 et 5');
+    }
+    if (!evaluation.id) {
+      throw new Error('L\'ID de l\'évaluation est requis pour la mise à jour');
+    }
+    
+    return this.http.put<Evaluation>(`${this.apiUrl}/${evaluation.id}`, evaluation);
+  }
+
+  deleteEvaluation(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }

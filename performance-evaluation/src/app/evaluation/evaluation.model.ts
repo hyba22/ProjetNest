@@ -6,4 +6,5 @@ export interface Evaluation {
     comments: string;
     date: Date;
     rating: number;
+    hrName?: string;
   }
